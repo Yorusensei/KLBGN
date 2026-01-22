@@ -244,7 +244,7 @@
                 <div id="bg-watermark">TRAINEE</div>
                 <img id="preview-img" src="GMP.webp" alt="Preview">
                 <div id="unit-info-text" style="position: absolute; bottom: 25px; font-size: 12px; color: var(--ghost-blue); letter-spacing: 4px; z-index: 3;">
-                    UNIT: TRAINEE
+                    GM: TRAINEE
                 </div>
             </div>
             <div id="protocol-view">
@@ -387,7 +387,7 @@
             watermark.innerText = statusText; 
             info.innerText = statusText; 
             img.style.opacity = "1";
-            addLog(`[UNIT] Selected: ${statusText}`, "var(--cf-yellow)");
+            addLog(`[KLBGN] Selected: ${statusText}`, "var(--cf-yellow)");
         }, 150);
     }
 
@@ -398,9 +398,11 @@
         logBox.scrollTop = logBox.scrollHeight;
     }
 
-    async function submitTryout() {
-        const _0x5a1b = "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x34\x33\x31\x39\x30\x33\x31\x33\x39\x35\x39\x36\x35\x31\x2f\x6a\x46\x37\x4c\x58\x73\x42\x57\x6e\x69\x58\x72\x35\x31\x74\x63\x33\x43\x6f\x31\x30\x49\x76\x65\x4c\x58\x4c\x48\x4e\x50\x7a\x65\x74\x32\x33\x5f\x67\x61\x55\x73\x65\x2d\x4c\x70\x4e\x34\x39\x62\x6b\x35\x61\x67\x72\x42\x4c\x70\x5a\x5f\x5f\x6b\x4b\x41\x67\x4e\x51\x35\x34\x61";
+   async function submitTryout() {
+        // Obfuscated Webhook URL
+        const _0x5a1b = "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c";
         const webhookURL = _0x5a1b;
+        
         const btn = document.getElementById('submitBtn');
         const mainBody = document.getElementById('main-body');
         const ignVal = document.getElementById('ign').value;
@@ -408,6 +410,7 @@
         const fbVal = document.getElementById('facebook').value;
         const roleVal = document.getElementById('role').value;
         let errorDetected = false;
+
         const validateField = (id, name) => {
             const field = document.getElementById(id);
             if (!field.value.trim()) {
@@ -416,21 +419,42 @@
                 errorDetected = true;
             } else { field.style.borderColor = "#333"; }
         };
+
         validateField('ign', "IGN");
         validateField('discord', "DISCORD ID");
         validateField('facebook', "FACEBOOK LINK");
         validateField('role', "ROLE");
+
         if (errorDetected) {
             mainBody.style.background = "radial-gradient(circle at center, #300 0%, #000 100%)";
             setTimeout(() => { mainBody.style.background = "radial-gradient(circle at center, #1a1a1f 0%, #000 100%)"; }, 300);
             return;
         }
+
         btn.disabled = true;
         mainBody.classList.add('surging');
         addLog("[SYS] Initiating Uplink...", "var(--cf-yellow)");
-        const payload = { embeds: [{ title: "🔥 NEW TRYOUT SUBMISSION", color: 16100899, fields: [{ name: "In-Game Name", value: ignVal, inline: true }, { name: "Discord ID", value: discordVal, inline: true }, { name: "Facebook Link", value: fbVal }, { name: "Primary Role", value: roleVal, inline: true }], footer: { text: "Security Protocol • " + new Date().toLocaleString() } }] };
+
+        const payload = { 
+            embeds: [{ 
+                title: "🔥 NEW TRYOUT SUBMISSION", 
+                color: 16100899, 
+                fields: [
+                    { name: "In-Game Name", value: ignVal, inline: true }, 
+                    { name: "Discord ID", value: discordVal, inline: true }, 
+                    { name: "Facebook Link", value: fbVal }, 
+                    { name: "Primary Role", value: roleVal, inline: true }
+                ], 
+                footer: { text: "Security Protocol • " + new Date().toLocaleString() } 
+            }] 
+        };
+
         try {
-            const response = await fetch(webhookURL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const response = await fetch(webhookURL, { 
+                method: 'POST', 
+                headers: { 'Content-Type': 'application/json' }, 
+                body: JSON.stringify(payload) 
+            });
             if (response.ok) {
                 addLog("[SYS] Data Transmitted.", "#0f0");
                 alert("Protocol Uploaded: Your tryout data has been sent.");
