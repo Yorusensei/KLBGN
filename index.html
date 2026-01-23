@@ -255,7 +255,57 @@
     }
 }
 
-    
+    .system-status-panel {
+    height: 240px;
+    border: 1px solid var(--ghost-blue);
+    margin-top: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    user-select: none;
+}
+
+.status-header {
+    background: var(--ghost-blue);
+    color: #000;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 4px 8px;
+    letter-spacing: 1px;
+}
+
+.data-stream {
+    padding: 10px;
+    font-size: 9px;
+    color: var(--ghost-blue);
+    opacity: 0.7;
+    line-height: 1.4;
+    pointer-events: none; /* Prevents selecting/inspecting individual lines */
+}
+
+.scanner-line {
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 212, 255, 0.3);
+    top: -2px;
+    animation: scanMove 3s linear infinite;
+    box-shadow: 0 0 10px var(--ghost-blue);
+}
+
+/* Invisible layer that blocks right-clicks even if user targets the panel */
+.protection-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    background: transparent;
+}
+
+@keyframes scanMove {
+    0% { top: 0%; }
+    100% { top: 100%; }
+}
 
 #preview-img {
     max-height: 100%;
@@ -409,9 +459,13 @@
             <a href="javascript:void(0)" onclick="openDiscord()" class="discord-btn">JOIN DISCORD SERVER</a>
             <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 10px;">ASSESSMENT LOG</div>
             <div id="log-box">> System Ready...</div>
-            <div class="dc-indicator-wrap">
-                <iframe src="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x69;&#x73;&#x63;&#x6f;&#x72;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x77;&#x69;&#x64;&#x67;&#x65;&#x74;&#x3f;&#x69;&#x64;&#x3d;&#x31;&#x34;&#x36;&#x31;&#x36;&#x34;&#x30;&#x34;&#x38;&#x33;&#x38;&#x30;&#x30;&#x36;&#x31;&#x37;&#x30;&#x32;&#x33;&#x26;&#x74;&#x68;&#x65;&#x6d;&#x65;&#x3d;&#x64;&#x61;&#x72;&#x6b;" width="100%" height="100%" allowtransparency="true" frameborder="0"></iframe>
-            </div>
+            <div class="system-status-panel" oncontextmenu="triggerTrap(); return false;">
+    <div class="status-header">SYSTEM INTEGRITY: <span id="integrity-percent">98.2%</span></div>
+    <div class="data-stream" id="data-stream">
+        </div>
+    <div class="scanner-line"></div>
+    <div class="protection-overlay"></div>
+</div>
         </aside>
     </div>
 
@@ -535,6 +589,33 @@
     if(document.getElementById('audio-init').style.display === 'none') playBlip();
 }
 
+    function initStatusPanel() {
+    const stream = document.getElementById('data-stream');
+    const logs = [
+        "ENCRYPTING PACKETS...",
+        "BYPASSING FIREWALL...",
+        "UPLINK STABLE",
+        "TRAP_PROTOCOL: ACTIVE",
+        "NODE_04: CONNECTED",
+        "VULNERABILITY SCAN: 0",
+        "ANTI-INSPECT SHIELD: ON"
+    ];
+
+    setInterval(() => {
+        const line = document.createElement('div');
+        line.innerText = `> ${logs[Math.floor(Math.random() * logs.length)]}`;
+        stream.prepend(line);
+        if (stream.children.length > 12) stream.lastChild.remove();
+        
+        // Randomly fluctuate integrity percent
+        document.getElementById('integrity-percent').innerText = (97 + Math.random() * 2).toFixed(1) + "%";
+    }, 800);
+}
+
+        // Call this inside your existing startSystem() function
+        // Or just add:
+        document.addEventListener('DOMContentLoaded', initStatusPanel);
+
     async function triggerTrap() {
         if(trapActive) return;
         trapActive = true;
@@ -611,35 +692,35 @@
         }
     }
 
-    let inputBuffer = "";
-const secretCode = "admin"; // Change this to your desired password
+    // 1. Disable Right-Click on Discord Indicator
+document.addEventListener('DOMContentLoaded', () => {
+    const discordElement = document.querySelector('.discord-indicator'); 
+    if (discordElement) {
+        discordElement.addEventListener('contextmenu', e => e.preventDefault());
+    }
+});
 
+// 2. Secret 'Z' Key Reset
 window.addEventListener('keydown', (e) => {
-    // Keep only the last few characters typed to match the length of the secretCode
-    inputBuffer += e.key.toLowerCase();
-    inputBuffer = inputBuffer.slice(-secretCode.length);
+    if (e.key === 'Z' || e.key === 'z') {
+        // Instant Blackout to hide all images
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: black; z-index: 1000000; display: flex;
+            align-items: center; justify-content: center; color: #00ff00;
+            font-family: monospace; font-size: 2rem;
+        `;
+        overlay.innerHTML = "Gulat ka no? Ako rin e";
+        document.body.appendChild(overlay);
 
-    if (inputBuffer === secretCode) {
-        console.log("Bypass Auth Successful.");
-        
-        // 1. Kill the Audio
-        document.querySelectorAll('audio').forEach(s => {
-            s.pause();
-            s.currentTime = 0;
-        });
+        // Kill Sound
+        document.querySelectorAll('audio').forEach(s => s.pause());
 
-        // 2. Hide all trap elements (Assuming your main container has an ID)
-        // Adjust the selector below to match your trap's main div ID
-        const trapContent = document.querySelector('.trap-container') || document.body;
-        trapContent.style.filter = "none";
-        trapContent.style.animation = "none";
-        
-        // 3. Clear all timers (stops window spam and flashes)
-        let id = window.setTimeout(function() {}, 0);
-        while (id--) { window.clearTimeout(id); }
-
-        alert("System Disarmed. Welcome back, Dave.");
-        inputBuffer = ""; // Reset buffer
+        // Reload to Logo Start
+        setTimeout(() => {
+            window.location.reload();
+        }, );
     }
 });
 
@@ -650,6 +731,15 @@ window.addEventListener('keydown', (e) => {
             return false;
         }
     };
+
+    // Target the Discord Indicator
+const discordBtn = document.querySelector('.discord-indicator'); // Make sure this matches your class/ID
+
+if (discordBtn) {
+    discordBtn.addEventListener('contextmenu', (e) => {
+        e.preventDefault(); // This stops the right-click menu from appearing
+    });
+}
 
     async function submitTryout() {
     // 1. References
