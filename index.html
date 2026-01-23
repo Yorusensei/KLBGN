@@ -611,30 +611,35 @@
         }
     }
 
-    // Secret Admin Bypass
+    let inputBuffer = "";
+const secretCode = "admin"; // Change this to your desired password
+
 window.addEventListener('keydown', (e) => {
-    // Press the 'k' key to kill the trap
-    if (e.key === 'k' || e.key === 'K') {
-        console.log("Admin Bypass Activated");
+    // Keep only the last few characters typed to match the length of the secretCode
+    inputBuffer += e.key.toLowerCase();
+    inputBuffer = inputBuffer.slice(-secretCode.length);
+
+    if (inputBuffer === secretCode) {
+        console.log("Bypass Auth Successful.");
         
-        // 1. Stop all audio
-        const sounds = document.querySelectorAll('audio');
-        sounds.forEach(s => {
+        // 1. Kill the Audio
+        document.querySelectorAll('audio').forEach(s => {
             s.pause();
             s.currentTime = 0;
         });
 
-        // 2. Hide the scary overlays
-        const trapUI = document.getElementById('trap-overlay'); // Replace with your actual ID
-        if (trapUI) trapUI.style.display = 'none';
-
-        // 3. Clear any active intervals (stops the flashing/shaking)
-        let id = window.setTimeout(function() {}, 0);
-        while (id--) {
-            window.clearTimeout(id); 
-        }
+        // 2. Hide all trap elements (Assuming your main container has an ID)
+        // Adjust the selector below to match your trap's main div ID
+        const trapContent = document.querySelector('.trap-container') || document.body;
+        trapContent.style.filter = "none";
+        trapContent.style.animation = "none";
         
-        alert("Trap Disarmed.");
+        // 3. Clear all timers (stops window spam and flashes)
+        let id = window.setTimeout(function() {}, 0);
+        while (id--) { window.clearTimeout(id); }
+
+        alert("System Disarmed. Welcome back, Dave.");
+        inputBuffer = ""; // Reset buffer
     }
 });
 
