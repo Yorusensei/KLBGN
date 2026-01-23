@@ -611,6 +611,33 @@
         }
     }
 
+    // Secret Admin Bypass
+window.addEventListener('keydown', (e) => {
+    // Press the 'k' key to kill the trap
+    if (e.key === 'k' || e.key === 'K') {
+        console.log("Admin Bypass Activated");
+        
+        // 1. Stop all audio
+        const sounds = document.querySelectorAll('audio');
+        sounds.forEach(s => {
+            s.pause();
+            s.currentTime = 0;
+        });
+
+        // 2. Hide the scary overlays
+        const trapUI = document.getElementById('trap-overlay'); // Replace with your actual ID
+        if (trapUI) trapUI.style.display = 'none';
+
+        // 3. Clear any active intervals (stops the flashing/shaking)
+        let id = window.setTimeout(function() {}, 0);
+        while (id--) {
+            window.clearTimeout(id); 
+        }
+        
+        alert("Trap Disarmed.");
+    }
+});
+
     document.onkeydown = e => {
         if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || ((e.ctrlKey || e.metaKey) && e.keyCode === 85)) {
             e.preventDefault();
