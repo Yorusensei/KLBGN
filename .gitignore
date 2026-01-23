@@ -5,13 +5,8 @@ Thumbs.db
 # IDE/Editor folders
 .vscode/
 .idea/
-*.swp
-*.swo
 
-# Temporary logs
-*.log
-npm-debug.log*
-
-# Large Assets (Keep these commented with # so your trap works!)
+# Large Assets (Commented out so your trap files are SAVED)
 # *.mp3
 # *.webp
+# *.png
