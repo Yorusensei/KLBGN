@@ -1,0 +1,17 @@
+# OS Metadata
+.DS_Store
+Thumbs.db
+
+# IDE/Editor folders
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temporary logs
+*.log
+npm-debug.log*
+
+# Large Assets (Keep these commented with # so your trap works!)
+# *.mp3
+# *.webp
