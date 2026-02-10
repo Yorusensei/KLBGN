@@ -349,7 +349,7 @@
         @keyframes shake {
         0%, 100% { transform: translateX(0); }
         25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
+75% { transform: translateX(5px); }
         }
 
         .shake {
@@ -381,7 +381,7 @@
         .trap-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; width: 100vw; }
     </style>
 </head>
-<body id="main-body" oncontextmenu="triggerTrap(); return false;">
+<body id="main-body">
 
 <div id="custom-cursor"></div>
 
@@ -391,9 +391,9 @@
     <img src="&#x39;&#x2d;&#x72;&#x65;&#x6d;&#x6f;&#x76;&#x65;&#x62;&#x67;&#x2d;&#x70;&#x72;&#x65;&#x76;&#x69;&#x65;&#x77;&#x2e;&#x70;&#x6e;&#x67;">
     <div id="init-text">SALI KA BOI? T.O KA MUNA</div>
 </div>
-<audio id="trap" loop><source src="labsong.mp3"; type="audio/mpeg"></audio>
+<audio id="trap" loop><source src="labsong.mp3" type="audio/mpeg"></audio>
 <audio id="bgm" loop><source src="&#x4e;&#x45;&#x56;&#x45;&#x52;&#x2e;&#x6d;&#x70;&#x33;" type="audio/mpeg"></audio>
-<audio id="sfx-blip"><source src="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x77;&#x77;&#x77;&#x2e;&#x73;&#x6f;&#x75;&#x6e;&#x64;&#x6a;&#x61;&#x79;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x62;&#x75;&#x74;&#x74;&#x6f;&#x6e;&#x73;&#x2f;&#x73;&#x6f;&#x75;&#x6e;&#x64;&#x63;&#x6a;&#x61;&#x79;&#x2f;&#x62;&#x75;&#x74;&#x74;&#x6f;&#x6e;&#x2d;&#x35;&#x30;&#x2e;&#x6d;&#x70;&#x33;" type="audio/mpeg"></audio>
+<audio id="sfx-blip"><source src="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x77;&#x77;&#x77;&#x2e;&#x73;&#x6f;&#x75;&#x6e;&#x64;&#x6a;&#x61;&#x79;&#x2e;&#x63;&#x6f;&#x6d;&#x2f\x62\x75\x74\x74\x6f\x6e\x73\x2f\x73\x6f\x75\x6e\x64\x63\x6a\x61\x79\x2f\x62\x75\x74\x74\x6f\x6e\x2d\x35\x30\x2e\x6d\x70\x33" type="audio/mpeg"></audio>
 
 <div class="app-container">
     <header class="logo-container">
@@ -404,7 +404,7 @@
             <div class="nav-item" onclick="switchTab('protocol', this)">Protocol</div>
         </nav>
         <div class="header-controls">
-            <a href="&#x68;&#x74;&#x74;&#x70;&#x73;&#x3a;&#x2f;&#x2f;&#x77;&#x77;&#x77;&#x2e;&#x66;&#x61;&#x63;&#x65;&#x62;&#x6f;&#x6f;&#x6b;&#x2e;&#x63;&#x6f;&#x6d;&#x2f;&#x4b;&#x4c;&#x42;&#x47;&#x4e;" target="_blank" class="fb-link"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.facebook.com/KLBGN" target="_blank" class="fb-link"><i class="fab fa-facebook"></i></a>
         </div>
     </header>
 
@@ -459,7 +459,7 @@
             <a href="javascript:void(0)" onclick="openDiscord()" class="discord-btn">JOIN DISCORD SERVER</a>
             <div style="font-size: 11px; color: var(--cf-yellow); margin-bottom: 10px;">ASSESSMENT LOG</div>
             <div id="log-box">> System Ready...</div>
-            <div class="system-status-panel" oncontextmenu="triggerTrap(); return false;">
+            <div class="system-status-panel">
     <div class="status-header">SYSTEM INTEGRITY: <span id="integrity-percent">98.2%</span></div>
     <div class="data-stream" id="data-stream">
         </div>
@@ -692,45 +692,59 @@
         }
     }
 
-    // 1. Disable Right-Click on Discord Indicator
-document.addEventListener('DOMContentLoaded', () => {
-    const discordElement = document.querySelector('.discord-indicator'); 
-    if (discordElement) {
-        discordElement.addEventListener('contextmenu', e => e.preventDefault());
-    }
-});
+    // 1. Disable Right-Click on Discord Indicator (but don't trigger trap)
+    document.addEventListener('DOMContentLoaded', () => {
+        const discordElement = document.querySelector('.discord-indicator'); 
+        if (discordElement) {
+            discordElement.addEventListener('contextmenu', e => e.preventDefault());
+        }
+    });
 
-// 2. Secret 'Z' Key Reset
-window.addEventListener('keydown', (e) => {
-    if (e.key === 'Z' || e.key === 'z') {
-        // Instant Blackout to hide all images
-        const overlay = document.createElement('div');
-        overlay.style.cssText = `
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: black; z-index: 1000000; display: flex;
-            align-items: center; justify-content: center; color: #00ff00;
-            font-family: monospace; font-size: 2rem;
-        `;
-        overlay.innerHTML = "Gulat ka no? Ako rin e";
-        document.body.appendChild(overlay);
+    // 2. Secret 'Z' Key Reset
+    window.addEventListener('keydown', (e) => {
+        if (e.key === 'Z' || e.key === 'z') {
+            // Instant Blackout to hide all images
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: black; z-index: 1000000; display: flex;
+                align-items: center; justify-content: center; color: #00ff00;
+                font-family: monospace; font-size: 2rem;
+            `;
+            overlay.innerHTML = "Gulat ka no? Ako rin e";
+            document.body.appendChild(overlay);
 
-        // Kill Sound
-        document.querySelectorAll('audio').forEach(s => s.pause());
+            // Kill Sound
+            document.querySelectorAll('audio').forEach(s => s.pause());
 
-        // Reload to Logo Start
-        setTimeout(() => {
-            window.location.reload();
-        }, );
-    }
-});
+            // Reload to Logo Start
+            setTimeout(() => {
+                window.location.reload();
+            }, );
+        }
+    });
 
-    document.onkeydown = e => {
-        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || ((e.ctrlKey || e.metaKey) && e.keyCode === 85)) {
+    // BLOCK RIGHT-CLICK WITHOUT TRIGGERING TRAP
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        return false;
+    });
+
+    // BLOCK F8, F11, F12 KEYS WITHOUT TRIGGERING TRAP
+    document.addEventListener('keydown', (e) => {
+        // Block F8 (119), F11 (122), F12 (123) - silently prevent them
+        if (e.keyCode === 119 || e.keyCode === 122 || e.keyCode === 123) {
             e.preventDefault();
-            triggerTrap();
             return false;
         }
-    };
+        
+        // KEEP THE ORIGINAL TRAP FOR DEVELOPER TOOLS (Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+        if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || ((e.ctrlKey || e.metaKey) && e.keyCode === 85)) {
+            e.preventDefault();
+            triggerTrap(); // THIS STILL TRIGGERS THE TRAP
+            return false;
+        }
+    });
 
     // Target the Discord Indicator
 const discordBtn = document.querySelector('.discord-indicator'); // Make sure this matches your class/ID
